@@ -18,3 +18,11 @@ View your app in AI Studio: https://ai.studio/apps/drive/1YklQS2Htgv8ey1gK_gnai3
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+## Quick App Summary
+
+This app presents a playful Valentine invitation flow:
+- asks "Will you be my Valentine?"
+- celebrates on **YES** with confetti and animation
+- keeps interaction playful with a moving **No** button
+
