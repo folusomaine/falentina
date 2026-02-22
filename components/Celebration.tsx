@@ -1,96 +1,94 @@
-import React, { useEffect, useMemo, useState } from 'react';
+
+import React, { useEffect, useState } from 'react';
 import confetti from 'canvas-confetti';
-import { Heart, Sparkles } from 'lucide-react';
 
 const Celebration: React.FC = () => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    const timer = window.setTimeout(() => setIsVisible(true), 120);
-
-    const duration = 6000;
+    const timer = setTimeout(() => setIsVisible(true), 100);
+    
+    const duration = 7 * 1000;
     const animationEnd = Date.now() + duration;
-    const defaults = {
-      startVelocity: 30,
-      spread: 340,
-      ticks: 90,
-      zIndex: 180,
-      scalar: 0.95
-    };
+    const defaults = { startVelocity: 35, spread: 360, ticks: 100, zIndex: 200 };
 
-    const interval = window.setInterval(() => {
+    function randomInRange(min: number, max: number) {
+      return Math.random() * (max - min) + min;
+    }
+
+    const interval: any = setInterval(function() {
       const timeLeft = animationEnd - Date.now();
 
       if (timeLeft <= 0) {
-        window.clearInterval(interval);
-        confetti({
-          particleCount: 160,
-          spread: 120,
-          origin: { x: 0.5, y: 0.6 },
-          zIndex: 180
-        });
-        return;
+        return clearInterval(interval);
       }
 
-      const particleCount = Math.max(10, Math.floor(40 * (timeLeft / duration)));
-      confetti({ ...defaults, particleCount, origin: { x: 0.2, y: 0.75 } });
-      confetti({ ...defaults, particleCount, origin: { x: 0.8, y: 0.75 } });
-    }, 320);
+      const particleCount = 70 * (timeLeft / duration);
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } });
+      confetti({ ...defaults, particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } });
+    }, 300);
+
+    // Audio for clapping / ovation sound
+    const audio = new Audio('https://assets.mixkit.co/active_storage/sfx/2026/2026-preview.mp3');
+    audio.play().catch(e => console.log("Audio play blocked", e));
 
     return () => {
-      window.clearInterval(interval);
-      window.clearTimeout(timer);
+      clearInterval(interval);
+      clearTimeout(timer);
     };
   }, []);
 
-  const floatingBadges = useMemo(() => ['💌', '🥂', '🌹', '💖'], []);
+  const mixedEmojis = ['💖', '🌻', '💖', '🌻', '💖'];
 
   return (
-    <section
-      className={`relative w-full max-w-4xl rounded-[2rem] border border-white/30 bg-white/15 p-4 shadow-[0_24px_90px_rgba(10,5,15,0.35)] backdrop-blur-2xl transition-all duration-700 sm:p-6 md:p-8 ${
-        isVisible ? 'translate-y-0 opacity-100' : 'translate-y-4 opacity-0'
-      }`}
-    >
-      <div className="overflow-hidden rounded-[1.6rem] border border-white/20 bg-gradient-to-br from-white/22 via-white/12 to-white/5 p-6 sm:p-8 md:p-10">
-        <div className="mx-auto flex w-fit items-center gap-2 rounded-full border border-white/30 bg-white/20 px-4 py-2 text-xs uppercase tracking-[0.24em] text-rose-50/90">
-          <Sparkles className="h-4 w-4" />
-          It is a date
-        </div>
+    <div className={`fixed inset-0 z-[150] bg-gradient-to-br from-white via-pink-100 to-pink-200 flex flex-col items-center justify-start overflow-y-auto pt-12 md:pt-32 p-6 md:p-12 transition-all duration-1000 ${isVisible ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}>
+      <h2 className="text-5xl md:text-8xl font-romantic text-red-600 mb-6 drop-shadow-sm animate-bounce text-center">
+        Yay! Clock itttttt! 👌
+      </h2>
+      <p className="text-2xl md:text-5xl font-heartland text-pink-600 mb-8 tracking-widest drop-shadow-sm text-center px-4">
+        See you on the 14th, my Valentine!
+      </p>
 
-        <h2 className="mt-6 text-center font-display text-5xl leading-tight text-white sm:text-6xl md:text-7xl">
-          Best answer ever.
-        </h2>
-        <p className="mx-auto mt-4 max-w-2xl text-center text-sm text-rose-100/90 sm:text-base md:text-lg">
-          February 14 is officially upgraded. Dress code: smiles, flowers, and dramatic eye contact.
-        </p>
-
-        <div className="relative mt-8 flex items-center justify-center py-8 sm:py-10">
-          <div className="absolute h-36 w-36 rounded-full bg-rose-300/35 blur-2xl sm:h-44 sm:w-44" />
-          <div className="relative flex h-24 w-24 items-center justify-center rounded-[1.7rem] border border-white/30 bg-white/25 shadow-[0_14px_32px_rgba(255,77,125,0.3)] sm:h-28 sm:w-28">
-            <Heart className="h-12 w-12 text-rose-100 animate-[pulse_1.8s_ease-in-out_infinite]" fill="currentColor" />
-          </div>
-        </div>
-
-        <div className="mt-2 grid grid-cols-2 gap-3 sm:grid-cols-4">
-          {floatingBadges.map((emoji, index) => (
-            <div
-              key={emoji}
-              className="rounded-2xl border border-white/25 bg-black/10 px-3 py-4 text-center text-3xl backdrop-blur-sm animate-[card-float_5s_ease-in-out_infinite]"
-              style={{ animationDelay: `${index * 0.35}s` }}
-            >
-              {emoji}
-            </div>
-          ))}
+      {/* Elegant Floating Heart Centerpiece - Responsive Height */}
+      <div className="relative w-full max-w-4xl h-[200px] md:h-[300px] flex items-center justify-center shrink-0">
+        <div className="animate-float">
+          <svg
+            width="180"
+            height="180"
+            viewBox="0 0 24 24"
+            fill="url(#heartGradient)"
+            xmlns="http://www.w3.org/2000/svg"
+            className="drop-shadow-2xl md:w-[240px] md:h-[240px]"
+          >
+            <defs>
+              <linearGradient id="heartGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stopColor="#ff4d4d" />
+                <stop offset="100%" stopColor="#ff0066" />
+              </linearGradient>
+            </defs>
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
+          </svg>
         </div>
       </div>
 
+      <div className="mt-8 mb-12 flex gap-4 md:gap-12 flex-wrap justify-center shrink-0">
+        {mixedEmojis.map((emoji, i) => (
+            <span key={i} className="text-4xl md:text-7xl animate-pulse" style={{ animationDelay: `${i * 0.15}s` }}>
+              {emoji}
+            </span>
+        ))}
+      </div>
+
       <style>{`
-        @keyframes card-float {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
+        @keyframes float {
+          0%, 100% { transform: translateY(0) scale(1) rotate(0deg); }
+          50% { transform: translateY(-15px) scale(1.05) rotate(5deg); }
+        }
+        .animate-float {
+          animation: float 4s ease-in-out infinite;
         }
       `}</style>
-    </section>
+    </div>
   );
 };
 
